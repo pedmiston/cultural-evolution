@@ -1,0 +1,346 @@
+---
+title: Cultural evolution and software development
+author: Pierce Edmiston
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    latex_engine: "lua"
+---
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+library(crotchet)
+
+opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE)
+sapply(list.files("src/R", "*.R", full.names = TRUE), read_chunk)
+sapply(list.files("src/dot", "*.gv", full.names = TRUE), read_graphviz_chunk)
+theme_set(theme_minimal(base_size = 20))
+```
+```{r peaks, include=FALSE}
+```
+
+# About me
+
+Studied cultural evolution in the Psychology Dept at UW-Madison.  
+Starting thinking about software development as a "model organism".  
+Hoping to convince you that **legacy code isn't as bad as you think.**
+
+<!--
+Today I'm going to talk about cultural evolution and software development.
+Cultural evolution is a topic I studied in grad school and as a postdoc, and as
+I learned more about more about it, I became really interested in how the ideas
+and debates about cultural evolution could be studied by looking at software
+development. I started to think about software development as a sort of model
+organism for studying cultural evolution. That perspective has really changed
+how I view software development, and I hope to share some of that perspective
+with you today. Ultimately, what I discovered is that **legacy code isn't as bad
+as we think.** Now I'm certainly not going to say that all legacy code is good
+and we should never write new software. But ultimately I think that we as
+crafters are far better at handing off codebases from one generation to the next
+than we give ourselves credit for.
+-->
+
+# How long does it take to run 400 meters?
+
+```{r relay-races, out.height="80%", fig.cap="World record sprint times. Data from Wikipedia."}
+```
+
+<!--
+To start I want to ask a question about relay races. How long does it take to
+run 400 meters? The world record holder for the 400m is Wayde van Niekerk from
+South Africa who in 2016 ran 400 meters in 43.03 seconds. This amounts to a bit
+under 11 seconds per 100 meters. But Usain Bolt, the world record holder for
+the 100m, can run 100 meters in 9.58 seconds. So a faster way to cover 400
+meters might be to have Usain Bolt run 100 meters 4 separate times, which would
+add up to a total of 38.32 seconds. This would be faster than van Niekerk, but
+it turns out that the fastest way to run 400 meters is as a relay team. In 2012
+the Jamaican team, which included Bolt, moved a baton 400 meters in 36.84
+seconds, 6 seconds faster than van Niekerk and 1.5 seconds faster than four
+times Bolt's fastest 100 meter.
+-->
+
+# Why is a relay strategy effective for running races?
+
+Each runner has less distance to run.  
+Only one runner has to accelerate from zero.  
+**Each person gets a head start on running.**
+
+<!--
+Why is a relay strategy effective for running races? Part of the reason
+is that each person has a shorter distance to run, and is less likely to
+get fatigued. But in order to explain why a relay team can be faster than
+the fastest individual, we need an additional explanation. In this case,
+the reason is that sprinters are at their slowest when accelerating, and
+usually take between 30 and 50 meters to reach peak velocity. In a relay
+team, only one person has to accelerate from 0, and everyone else receives
+the baton while already in motion. Part of the reason that a relay strategy
+is effective for running races is that each person gets a head start
+on running.
+-->
+
+# Is a relay strategy effective for problem solving?
+
+The baton is a tool or other solution to a problem.  
+Passing the baton would seem to give a head start, but how much?  
+**How do we know whether a relay strategy is effective?**
+
+\vspace{1em}
+
+```{r team-structures, out.height="55%", fig.align="left"}
+crotchet::draw_graphviz("team-structures", package = "totems")
+```
+
+<!--
+The question I was after in grad school is whether a relay strategy can ever
+similarly effective for problem solving. If we think about the baton as a tool
+or some other solution to a problem, we can pass that tool on to someone else
+to give them a head start, but how much does it really help them? How do we
+know whether a relay strategy is effective?
+
+My answer to this question is summarized in this diagram. The figure on top
+is the relay strategy: one person starts on a solution to a problem before
+handing it off to the next generation. I call this "diachronic collaboration"
+because it's teamwork that extends over time. We can compare this strategy
+to "synchronic collaboration" where the teamwork is happening at the same time.
+Finally, we have individual work, where one person "goes it alone".
+
+My argument was basically that if we ever compare these three strategies and
+find that the relay strategy is the most effective, then we are forced to
+conclude that a relay strategy does more than just give you a head start
+on a problem, it actually changes the way you solve it. It makes you more
+effective than you would have been if you would have tried to do it alone.
+-->
+
+# Is teamwork effective for problem solving?
+
+Surprisingly, "assembly bonus effects" are rare in psychology.  
+
+- Collective memory
+- **Wason selection task**
+
+<!--
+Before we answer this question about relay teams, it's worth taking a step back
+and asking whether traditional, synchronic teamwork helps with problem solving.
+These effects are referred to as "assembly bonus effects", where the sum is
+greater than its parts. Surprisingly, these assembly bonus effects are
+actually pretty rare in the psychological literature. Working in a team on
+a problem often doesn't raise the ability of the team beyond the most effective
+member. There are a few cases that have been documented. One example is on
+collective memory, where if I were to flash up a screen full of objects
+and then ask you questions about them, you would be better off working in a
+team as opposed to as an individual. Another example is the Wason selection
+task. This is a little logic puzzle that's pretty easy to demo, so let's give
+it a shot.
+-->
+
+# Wason selection task
+
+Each card has a number on one side, and a patch of color on the other.  
+> If a card is even on one side, then it's red on the other.  
+**Which cards do we need to flip over to prove it?**
+
+```{r wason-selection-task, fig.cap="Wason selection task, from Wikipedia."}
+include_graphics("img/wason.pdf")
+```
+
+<!--
+/poll "Which cards do we need to flip over to prove the rule?" "AB" "AC" "AD" "BC" "BD" "CD" anonymous
+-->
+
+# Wason selection task
+
+Each card has an age on one side, and a beverage on the other.  
+> If a person is under 21, they should be drinking soda.  
+**Which two cards do we need to flip to prove it?**
+
+```{r wason-selection-task--social, fig.cap="Wason selection task, from Wikipedia."}
+include_graphics("img/wason-social.pdf")
+```
+
+<!--
+-->
+
+# Teamwork is good for exploration / exploitation
+
+```{r wildcat-wells, fig.cap="Wildcat Wells experiment (Mason \\& Watts, 2012, ``Collaborative learning in networks'').", out.height="80%"}
+gridExtra::grid.arrange(
+  crotchet::read_image("img/wildcat-wells-fitness.png"),
+  crotchet::read_image("img/wildcat-wells.png"),
+  ncol = 2
+)
+```
+
+<!--
+-->
+
+# When is a relay strategy effective for problem solving?
+
+```{r diachronic-collaboration, engine="dot"}
+```
+
+1. A relay strategy can remediate the costs of fixation.
+1. A relay team with complementary skills is "greater than its parts."
+
+# Solving a problem as climbing a hill
+
+A problem solver exists as a point in the landscape.  
+They can see some distance in X and Y.  
+Each time step they try to move up the hill.  
+
+\vspace{1em}
+
+```{r simple-hill, out.height="60%", fig.align="center"}
+```
+
+# Visualizing complementary skills
+
+```{r ability-as-vision, out.height="90%", out.width="80%", fig.height=10, fig.width=8}
+```
+
+<!--
+Agents have skill corresponding to vision in two dimensions.
+Agents have equal or unequal skill along those two dimensions.
+-->
+
+# Results
+
+```{r differing-skills, fig.height=10, fig.width=10, out.width="80%", out.height="80%"}
+```
+
+# Explanation
+
+```{r differing-skills-walk}
+gg_differing_skills_walk
+```
+
+# Complementary codebases
+
+**Proposal:** Rebrand legacy codebases as ``complementary.''  
+Is this why solving problems in different languages is so valuable?  
+
+# Real teams blend all forms of teamwork
+
+```{r tina-team, engine="dot"}
+```
+
+# Human culture as a really long relay race
+
+Why are humans effective problem solvers?
+
+- We evolved specialized intelligences.
+- **We developed systems of cultural inheritance**.
+
+<!--
+The reason this question is important is because of it's relevance to ongoing
+debates about human evolution, in particular, what it is that makes us such
+effective problem solvers as compared to other animals. If I had to simplify the
+debate somewhat, I would say that on one side we have people saying that we
+evolved specialized intelligences that enable advanced reasoning processes that
+improve individual problem solving abilities.
+
+An alternative view is that we owe our success in problem solving in large
+part to our systems of cultural inheritance. On this view, it's not our
+ability to solve problems as individuals that is all that impressive. Instead
+it's our ability to copy other people that makes us adaptive problem solvers.
+Humans may be smart, but cultures are smarter.
+-->
+
+# Lost European explorer experiments
+
+> [S]tarvation on nardoo is by no means unpleasant, but for the weakness one
+  feels, and the utter inability to move oneself, for as the appetite is
+  concerned, it gives me the greatest satisfaction.
+
+```{r nardoo, out.height="40%", fig.cap="The nardoo aquatic fern, native to Australia."}
+crotchet::draw_image("img/nardoo.jpg")
+```
+  
+<!--
+A favorite source of evidence for why cultures are more adaptive than
+individuals comes from what has been termed the Lost European explorer
+experiments. This is where a group of intelligent and well-equipped adventurers
+somehow get stranded in a foreign land, and the test is whether they can
+survive off the land long enough to make it back home. The irony of these
+experiments is that the explorers often die right alongside indigenous cultures
+who have somehow figured out how to thrive in the same environment.
+
+An example of this is the Burke and Wills expedition across Australia. As
+they ventured across inland Australia they were running out of supplies, but
+they ran into a group of native Australians that were surviving off the land just
+fine. They saw that these Australians survived largely by eating an aquatic
+fern called nardoo. The Australians prepared this plant by mashing it into
+a paste and forming it into little cakes. But all the explorers saw was that the
+Aborigines were eating a lot of nardoo, so they assumed it wasn't harmful. It
+turns out that the food preparation process removed toxins from the nardoo,
+and when eaten unprepared, it caused a form of thamine deficiency that ultimately
+lead to their deaths.
+
+Here is a passage from Wills diary shortly before he died, describing how
+odd it was to die of starvation with a full belly.
+
+> [S]tarvation on nardoo is by no means unpleasant, but for the weakness one
+  feels, and the utter inability to move oneself, for as the appetite is
+  concerned, it gives me the greatest satisfaction.
+
+The Lost European explorer experiments demonstrate that cultures seem to be
+better at solving the problems necessary for survival than any individual
+plopped down in the same environmental conditions.
+-->
+
+# Lost Software Crafter experiments
+
+- Trying to follow an out-of-date README to set up a dev machine.
+- Googling a problem that may or may not be related to my IDE.
+- Completing an 8th Light apprenticeship solely from the syllabus.
+
+\vspace{2em}
+
+> Running these long bash commands is by no means unpleasant, but for the errors
+  they generate, and the utter inability to serve the app at localhost:8080,
+  for as my mechanical keyboard is concerned, it gives me the greatest
+  satisfaction.
+
+<!--
+Looking back at the Burk and Wills expedition it made me think of what the
+analogous situation might be at 8th Light. I can imagine some "Lost Software
+Crafter experiments" that may sound familiar to some of you, like
+"Trying to follow an out-of-date README to set up a dev machine."
+"Googling a problem that may or may not be related to my IDE."
+"Completing an 8th Light apprenticeship solely from the syllabus."
+I can imagine writing something like this in my journal:
+
+> Running these long bash commands is by no means unpleasant, but for the errors
+  they generate, and the utter inability to serve the app at localhost:8080,
+  for as my mechanical keyboard is concerned, it gives me the greatest
+  satisfaction.
+-->
+
+# Crafters are experts at cultural inheritance.
+
+Programming languages were invented for humans.  
+Open source software removes a huge barrier to entry.  
+DevOps practices make it easier for the next generation.  
+
+<!--
+-->
+
+# Why do crafters care about tooling?
+
+```bash
+# dp-toolchain
+dp ssm tina/dev
+```
+
+<!--
+
+-->
+
+# Why legacy code isn't as bad as you think
+
+Working software is a valuable cultural artifact.  
+Rebrand it as ``complementary code''!  
+
+# Cultural evolution and software development
+
+Pierce Edmiston  
+[github.com/pedmiston/miniconf21](https://github.com/pedmiston/miniconf21)

@@ -1,0 +1,69 @@
+digraph {
+  rankdir = LR;
+  node[shape=circle fontname=helvetica width=1 style=filled];
+  edge[arrowhead=none];
+  fontname=helvetica;
+  bgcolor=transparent;
+  
+  subgraph cluster0 {
+    label = "TINA";
+    t0 -> t1 -> t2 -> t3 -> t4 -> t5[style=invis];
+    t0, t1, t2, t3, t4, t5[label="" width=0 style=invis];
+    
+    Myles0, Chris0, Hana0, Pierce0;
+    Naomi1, Hana1, Chris1, Myles1, Pierce1, Gina1;
+    Hana2,Myles2;
+    Pierce3, Julia3;
+    Myles4, Pierce4, Hana4;
+    Hana5, Myles5;
+    
+    { rank=same;
+      t0, Myles0, Chris0, Pierce0, Hana0;
+    }
+    
+    { rank=same;
+      t1, Myles1, Chris1, Pierce1, Hana1, Naomi1, Gina1
+    }
+    
+    { rank=same;
+      t2, Myles2, Hana2
+    }
+    
+    {
+      rank=same;
+      t3
+      Pierce3
+      Julia3
+    }
+    
+    {
+      rank=same;
+      t4
+      Myles4
+      Pierce4
+      Hana4
+    }
+    
+        
+    {
+      rank=same;
+      t5
+      Myles5
+      Hana5
+    }
+    
+    { Myles0, Chris0, Pierce0, Hana0 } -> { Myles1, Chris1, Pierce1, Hana1, Naomi1, Gina1 };
+    { Myles1, Chris1, Pierce1, Hana1, Naomi1, Gina1 } -> { Myles2, Hana2 };
+    { Myles2, Hana2 } -> { Pierce3, Julia3 };
+    { Pierce3, Julia3 } -> { Myles4, Hana4, Pierce4 };
+    { Myles4, Hana4, Pierce4 } -> { Myles5, Hana5 };
+    
+    Myles0, Myles1, Myles2, Myles4, Myles5[label="Myles" fillcolor="#66c2a5"];
+    Pierce0, Pierce1, Pierce3, Pierce4[label="Pierce" fillcolor="#fc8d62"];
+    Hana0, Hana1, Hana2, Hana4, Hana5[label="Hana" fillcolor="#8da0cb"];
+    Chris0, Chris1[label="Chris" fillcolor="#e78ac3"];
+    Gina1[label="Gina" fillcolor="#a6d854"];
+    Naomi1[label="Naomi" fillcolor="#ffd92f"];
+    Julia3[label="Julia" fillcolor="#e5c494"]
+  }
+}
